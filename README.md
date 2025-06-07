@@ -1,7 +1,6 @@
-# BLENDED_LEARNING
-# Implementation-of-Stochastic-Gradient-Descent-SGD-Regressor
-# Name : YASHWANTH RAJA DURAI.V
-# REG NO : 212222040284
+## BLENDED_LEARNING
+## Implementation-of-Stochastic-Gradient-Descent-SGD-Regressor
+### DATE:15-05-2025
 ## AIM:
 To write a program to implement Stochastic Gradient Descent (SGD) Regressor for linear regression and evaluate its performance.
 
@@ -9,22 +8,28 @@ To write a program to implement Stochastic Gradient Descent (SGD) Regressor for 
 1. Hardware – PCs
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
-## Algorithm
-1. Import the necessary libraries.
-2. Load the dataset.
-3. Preprocess the data (handle missing values, encode categorical variables).
-4. Split the data into features (X) and target (y).
-5. Divide the data into training and testing sets.
-6. Create an SGD Regressor model.
-7. Fit the model on the training data.
-8. Evaluate the model performance.
-9. Make predictions and visualize the results.
+## Algorithm:
+1. Import necessary libraries (pandas, numpy, sklearn, matplotlib).
+2. Load the dataset using pandas.
+3. Preprocess the data:
+
+   * Drop unnecessary columns (e.g., CarName, car\_ID).
+   * Convert categorical variables using one-hot encoding.
+4. Split the dataset into features (X) and target (Y), then into training and testing sets.
+5. Standardize the features and target using StandardScaler.
+6. Initialize the SGDRegressor model with appropriate parameters.
+7. Train the model on the training data.
+8. Predict the target values for the test data.
+9. Evaluate the model using Mean Squared Error and R² score.
+10. Display model coefficients and intercept.
+11. Visualize actual vs predicted values with a scatter plot.
+12. End of workflow.
 
 ## Program:
-```
-/*
+```py
 Program to implement SGD Regressor for linear regression.
-*/
+Developed by: YASHWANTH RAJA DURAI V
+RegisterNumber: 212222040184
 # Importing necessary libraries
 import pandas as pd
 import numpy as np
@@ -32,62 +37,78 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
+
 # Load the dataset
-data = pd.read_csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-ML240EN-SkillsNetwork/labs/data/CarPrice_Assignment.csv")
+data = pd.read_csv('CarPrice_Assignment.csv')
+print(data.head())
+print("\n\n")
+print(data.info())
 
 # Data preprocessing
 # Dropping unnecessary columns and handling categorical variables
 data = data.drop(['CarName', 'car_ID'], axis=1)
 data = pd.get_dummies(data, drop_first=True)
-# Define target variable (y) and features (X)
-y = df['price']
-X = df.drop(['price'], axis=1)
 
-# Print the shape of X and y
-print(X.shape, y.shape)
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Splitting the data into features and target variable
+x = data.drop('price', axis=1)
+y = data['price']
 
-# Check the shapes of the training and test sets
-print(X_train.shape, X_test.shape)
-# Standardize the features
+# Standardizing the data
 scaler = StandardScaler()
+x = scaler.fit_transform(x)
+y = scaler.fit_transform(np.array(y).reshape(-1, 1)).ravel()
 
-# Fit the scaler on the training data and transform both training and test sets
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-# Initialize and train the SGD Regressor model
-sgd_regressor = SGDRegressor(max_iter=1000, tol=1e-3, random_state=42)
-sgd_regressor.fit(X_train_scaled, y_train)
 
-# Predict on the test set
-y_pred = sgd_regressor.predict(X_test_scaled)
-# Calculate Mean Squared Error (MSE)
+# Splitting the dataset into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
+
+# Creating the SGD Regressor model
+sgd_model = SGDRegressor(max_iter=1000, tol=1e-3)
+
+# Fitting the model on the training data
+sgd_model.fit(x_train, y_train)
+
+# Making predictions
+y_pred = sgd_model.predict(x_test)
+
+# Evaluating model performance
 mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse}")
-
-# Calculate R-squared score
 r2 = r2_score(y_test, y_pred)
-print(f"R-squared score: {r2}")
-# Calculate Mean Squared Error (MSE)
-mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse}")
 
-# Calculate R-squared score
-r2 = r2_score(y_test, y_pred)
-print(f"R-squared score: {r2}")
-# Plot actual vs predicted car prices
+# Print evaluation metrics
+print()
+print()
+print("Mean Squared Error:", mse)
+print("R-squared Score:", r2)
+
+# Print model coefficients
+print("\n\n")
+print("Model Coefficients")
+print("Coefficients:", sgd_model.coef_)
+print("Intercept:", sgd_model.intercept_)
+
+# Visualizing actual vs predicted prices
+print("\n\n")
 plt.scatter(y_test, y_pred)
-plt.xlabel('Actual Prices')
-plt.ylabel('Predicted Prices')
-plt.title('Actual vs Predicted Car Prices')
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices using SGD Regressor")
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red')  # Perfect prediction line
 plt.show()
+
 ```
 
 ## Output:
-![Screenshot 2024-10-06 193048](https://github.com/user-attachments/assets/93ca0593-5dec-45a1-bcc2-135377e383ec)
+### LOAD THE DATASET:
+![Screenshot 2025-05-14 134927](https://github.com/user-attachments/assets/ef77303a-ac3b-47df-8ff6-696a6914dd27)
+![Screenshot 2025-05-14 134932](https://github.com/user-attachments/assets/7fdc9780-4a58-4a75-a69f-8c1226869532)
 
-
+### EVALUATION METRICS:
+![Screenshot 2025-05-14 134937](https://github.com/user-attachments/assets/7db473af-3d52-4090-87d6-78412a7e83c1)
+### MODEL COEFFICIENTS:
+![Screenshot 2025-05-14 134941](https://github.com/user-attachments/assets/4c1ec1c6-0eff-42b5-be27-628072441618)
+### VISUALIZATION OF ACTUAL VS PREDICTED VALUES:
+![Screenshot 2025-05-14 134945](https://github.com/user-attachments/assets/35ff3fb4-5eb7-4bd3-9a02-0f996c1ec3de)
 
 ## Result:
 Thus, the implementation of Stochastic Gradient Descent (SGD) Regressor for linear regression has been successfully demonstrated and verified using Python programming.
